@@ -1,6 +1,9 @@
 package pharmacysystem;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
@@ -77,9 +80,9 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         expirationDateField = new JTextField();
         costLabel = new JLabel("Cost:");
         costField = new JTextField();
-        inventoryLabel = new JLabel("Inventory:");
+        inventoryLabel = new JLabel("Current Inventory:");
         inventoryField = new JTextField();
-        quantityLabel = new JLabel("Quantity:");
+        quantityLabel = new JLabel("Quantity Needed:");
         quantitySpinner = new JSpinner();
         saveButton = new JButton("Save");
 
@@ -146,10 +149,10 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         private JTextField expirationDateField;
         private JLabel costLabel;
         private JTextField costField;
-        private JLabel inventoryLabel;
-        private JTextField inventoryField;
         private JLabel quantityLabel;
         private JSpinner quantitySpinner;
+        private JLabel totalCostLabel;
+        private JTextField totalCostField;
         private JButton saveButton;
         private Inventory inventory;
         
@@ -160,11 +163,13 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         prescriptionNames = new JComboBox<>(inventory.getPrescriptions().keySet().toArray(new String[0]));
         expirationDateLabel = new JLabel("Expiration Date:");
         expirationDateField = new JTextField();
-        costLabel = new JLabel("Cost:");
+        costLabel = new JLabel("Cost Per:");
         costField = new JTextField();
-        quantityLabel = new JLabel("Quantity:");
+        quantityLabel = new JLabel("Quantity Needed:");
         quantitySpinner = new JSpinner();
-        saveButton = new JButton("Save");
+        totalCostLabel = new JLabel("Total Cost:");
+        totalCostField = new JTextField();
+        saveButton = new JButton("Process Transaction");
 
         // Add the UI components to the frame
         setLayout(new GridLayout(6, 2));
@@ -176,28 +181,50 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         add(costField);
         add(quantityLabel);
         add(quantitySpinner);
+        add(totalCostLabel);
+        add(totalCostField);
         add(new JLabel());
         add(saveButton);
 
-        // Add a listener to the prescription name drop-down menu
         prescriptionNames.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get the selected prescription name
                 String prescriptionName = (String) prescriptionNames.getSelectedItem();
-
+        
                 // Get the prescription object from the inventory
                 Inventory.Prescription prescription = inventory.getPrescription(prescriptionName);
-
+        
                 // Populate the expiration date, cost, and inventory fields
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
                 expirationDateField.setText(prescription.getExpirationDate().format(formatter));
                 costField.setText(Double.toString(prescription.getCost()));
-
+        
                 // Set the quantity spinner value to 1
                 quantitySpinner.setValue(1);
+        
+                // Update the total cost field
+                double totalCost = prescription.getCost() * (int) quantitySpinner.getValue();
+                totalCostField.setText(Double.toString(totalCost));
             }
         });
+
+        quantitySpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // Get the current cost and quantity
+                double cost = Double.parseDouble(costField.getText());
+                int quantity = (int) quantitySpinner.getValue();
+                
+                // Calculate the total cost
+                double totalCost = cost * quantity;
+                
+                // Update the total cost field
+                totalCostField.setText(String.format("%.2f", totalCost));
+            }
+        });
+        
+        
 
         saveButton.addActionListener(new ActionListener() {
             @Override
