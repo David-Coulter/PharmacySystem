@@ -68,14 +68,20 @@ import java.awt.*;
 
     private void openTransactionGUI() {
         // code to open the transaction GUI
-    }
+        TransactionManagementGUI transactionGUI = new TransactionManagementGUI();
+        transactionGUI.setVisible(true);
+    } 
 
     private void openReportGUI() {
         // code to open the report GUI
+        ReportGUI reportGUI = new ReportGUI();
+        reportGUI.setVisible(true);
     }
 
     private void openPharmacyGUI() {
         // code to open the pharmacy GUI
+        PharmacyGUI pharmacyGUI = new PharmacyGUI();
+        pharmacyGUI.setVisible(true);
     }
 
     public static void main(String[] args) {

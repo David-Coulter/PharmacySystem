@@ -37,7 +37,7 @@ public class InventoryManagementGUI extends JFrame implements ActionListener {
         getContentPane().add(buttonPanel, BorderLayout.NORTH);
         getContentPane().add(mainPanel, BorderLayout.CENTER);
         
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);
         setVisible(true);
     }

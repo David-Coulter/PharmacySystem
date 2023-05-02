@@ -47,7 +47,7 @@ public class PatientManagementGUI extends JFrame implements ActionListener {
         getContentPane().add(mainPanel, BorderLayout.CENTER);
 
         // Set up frame
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600,400);
         setLocationRelativeTo(null);
 
