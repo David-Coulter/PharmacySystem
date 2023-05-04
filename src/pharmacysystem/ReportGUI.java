@@ -1,15 +1,11 @@
 package pharmacysystem;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.format.DateTimeFormatter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
-
 
 public class ReportGUI extends JFrame implements ActionListener {
 
@@ -18,35 +14,58 @@ public class ReportGUI extends JFrame implements ActionListener {
     private CardLayout cardLayout;
     private InventoryReportPanel inventoryReportPanel;
     private PatientReportPanel patientReportPanel;
+    private JPanel headerPanel;
+    Font myFont = new Font("Proxima Nova", Font.BOLD, 14);
 
     public ReportGUI() {
         super("Report Generation");
 
+        // set up the header panel with an image
+        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/pharmacy.png"));
+        JLabel header = new JLabel(icon);
+        header.setPreferredSize(new Dimension(200, 50));
+        headerPanel = new JPanel();
+        headerPanel.add(header);
+        headerPanel.setBackground(new Color(171, 5, 32));
+
         inventoryReportButton = new JButton("View Inventory");
         inventoryReportButton.addActionListener(this);
+        inventoryReportButton.setFont(myFont);
+        inventoryReportButton.setFocusable(false);
+        inventoryReportButton.setForeground(Color.WHITE);
+        inventoryReportButton.setBackground(new Color(12, 35, 75));
 
         patientReportButton = new JButton("View Patients");
+        patientReportButton.setFocusable(false);
+        patientReportButton.setFont(myFont);
         patientReportButton.addActionListener(this);
+        patientReportButton.setForeground(Color.WHITE);
+        patientReportButton.setBackground(new Color(12, 35, 75));
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        buttonPanel.setPreferredSize(new Dimension(500, 30));
         buttonPanel.add(inventoryReportButton);
         buttonPanel.add(patientReportButton);
 
 
         inventoryReportPanel = new InventoryReportPanel();
         patientReportPanel = new PatientReportPanel();
+
         mainPanel = new JPanel();
         cardLayout = new CardLayout();
         mainPanel.setLayout(cardLayout);
         mainPanel.add(inventoryReportPanel, "inventoryReportPanel");
         mainPanel.add(patientReportPanel, "patientReportPanel");
+        mainPanel.setPreferredSize(new Dimension(600, 400));
 
-        getContentPane().add(buttonPanel, BorderLayout.NORTH);
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        add(headerPanel, BorderLayout.NORTH);
+        getContentPane().add(buttonPanel, BorderLayout.CENTER);
+        getContentPane().add(mainPanel, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 600);
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -75,11 +94,16 @@ public class ReportGUI extends JFrame implements ActionListener {
     
             // Initialize the UI components
             reportButton = new JButton("Generate Report");
+            reportButton.setFont(myFont);
+            reportButton.setPreferredSize(new Dimension(600, 50));
+            reportButton.setForeground(Color.WHITE);
+            reportButton.setBackground(new Color(12, 35, 75));
+
             inventoryTextArea = new JTextArea();
     
             // Add the UI components to the frame
             setLayout(new BorderLayout());
-            add(reportButton, BorderLayout.NORTH);
+            add(reportButton, BorderLayout.SOUTH);
             add(new JScrollPane(inventoryTextArea), BorderLayout.CENTER);
     
             reportButton.addActionListener(new ActionListener() {
@@ -146,11 +170,14 @@ public class ReportGUI extends JFrame implements ActionListener {
     
         // Initialize the UI components
         reportButton = new JButton("Generate Report");
+        reportButton.setForeground(Color.WHITE);
+        reportButton.setBackground(new Color(12, 35, 75));
+
         patientTextArea = new JTextArea();
     
         // Add the UI components to the frame
         setLayout(new BorderLayout());
-        add(reportButton, BorderLayout.NORTH);
+        add(reportButton, BorderLayout.SOUTH);
         add(new JScrollPane(patientTextArea), BorderLayout.CENTER);
     
         reportButton.addActionListener(new ActionListener() {

@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
-public class AddItemInventoryPanel extends JPanel {
+public class RemoveItemInventoryPanel extends JPanel {
 	private JComboBox<String> prescriptionNames;
     private JLabel prescriptionLabel;
     private JLabel expirationDateLabel;
@@ -29,7 +29,7 @@ public class AddItemInventoryPanel extends JPanel {
     Font myFont = new Font("Proxima Nova", Font.BOLD, 14);
     Font fieldFont = new Font("Proxima Nova", Font.PLAIN, 12);
 
-    public AddItemInventoryPanel() {
+    public RemoveItemInventoryPanel() {
     	inventory = new Inventory();
 
         // Initialize the UI components
@@ -64,7 +64,7 @@ public class AddItemInventoryPanel extends JPanel {
         newinventoryField = new JTextField();
         newinventoryField.setFont(fieldFont);
 
-        saveButton = new JButton("Add Items");
+        saveButton = new JButton("Remove Items");
         saveButton.setForeground(Color.WHITE);
         saveButton.setFont(myFont);
         saveButton.setBackground(new Color(12, 35, 75));
@@ -90,7 +90,8 @@ public class AddItemInventoryPanel extends JPanel {
         add(newinventoryField);
         add(saveButton);
         add(resetButton);
-    
+        
+
         // Add a listener to the prescription name drop-down menu
         prescriptionNames.addActionListener(new ActionListener() {
             @Override
@@ -119,7 +120,7 @@ public class AddItemInventoryPanel extends JPanel {
                 int currentQuantity = Integer.parseInt(inventoryField.getText());
 
                 // Calculate the new inventory
-                int newInventory = currentQuantity + (int) quantitySpinner.getValue();
+                int newInventory = currentQuantity - (int) quantitySpinner.getValue();
 
                 // Update the newinventoryField
                 newinventoryField.setText(Integer.toString(newInventory));

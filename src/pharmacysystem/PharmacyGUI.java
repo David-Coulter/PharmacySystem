@@ -1,43 +1,60 @@
 package pharmacysystem;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.format.DateTimeFormatter;
-import pharmacysystem.Pharmacy;
 
 public class PharmacyGUI extends JFrame implements ActionListener {
     private JButton pharmacyButton;
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private PharmacyPanel pharmacyPanel;
+    private JPanel headerPanel;
+    Font myFont = new Font("Proxima Nova", Font.BOLD, 14);
     
 
     public PharmacyGUI() {
         super("Pharmacy Management");
 
+        // set up the header panel with an image
+        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/pharmacy.png"));
+        JLabel header = new JLabel(icon);
+        header.setPreferredSize(new Dimension(200, 50));
+        headerPanel = new JPanel();
+        headerPanel.add(header);
+        headerPanel.setBackground(new Color(171, 5, 32));
+
         pharmacyButton = new JButton("View Pharmacy");
+        pharmacyButton.setFocusable(false);
+        pharmacyButton.setFont(myFont);
         pharmacyButton.addActionListener(this);
+        pharmacyButton.setForeground(Color.WHITE);
+        pharmacyButton.setBackground(new Color(12, 35, 75));
 
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 1));
+        buttonPanel.setPreferredSize(new Dimension(500, 30));
         buttonPanel.add(pharmacyButton);
 
-        pharmacyPanel = new PharmacyPanel();
+        
+        Pharmacy pharmacy = new Pharmacy("SFWE Pharmacy", "http://sfwepharmacy.com", "Sharon Oneal", "520-123-4567", "5:00 am - 5:00 pm", "@sfwepharmacy");
+        pharmacyPanel = new PharmacyPanel(pharmacy);
 
         mainPanel = new JPanel();
         cardLayout = new CardLayout();
         mainPanel.setLayout(cardLayout);
         mainPanel.add(pharmacyPanel, "PharmacyPanel");
+        mainPanel.setPreferredSize(new Dimension(600, 420));
 
-        getContentPane().add(buttonPanel, BorderLayout.NORTH);
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        //Use the same layout and add the same padding and gap values
+        add(headerPanel, BorderLayout.NORTH);
+        add(buttonPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 600);
         setVisible(true);
+        setLocationRelativeTo(null);
         
     }
 
@@ -67,34 +84,61 @@ public class PharmacyGUI extends JFrame implements ActionListener {
         private JLabel socialMediaLabel;
         private JTextField socialMediaField;
         private JButton saveButton;
+        private JButton resetButton;
         private Pharmacy pharmacy;
         
-        public PharmacyPanel() {
-            pharmacy = new Pharmacy("Yuma Pharmacy", "http://yumapharmacy.com", "Joe Yuma", "928-123-4567", "5:00 am - 5:00 pm", "@yumapharmacy");
-
+        
+        public PharmacyPanel(Pharmacy pharmacy) {
+            this.pharmacy = pharmacy;
+        
             // Initialize the UI components
             pharmacyNameLabel = new JLabel("Pharmacy Name: ");
-            pharmacyNameField = new JTextField();
+            pharmacyNameField = new JTextField(pharmacy.getName());
             websiteURLLabel = new JLabel("Website URL:");
-            websiteURLField = new JTextField();
+            websiteURLField = new JTextField(pharmacy.getWebsiteUrl());
             ownerLabel = new JLabel("Owner:");
-            ownerField = new JTextField();
+            ownerField = new JTextField(pharmacy.getOwner());
             phoneNumberLabel = new JLabel("Phone Number:");
-            phoneNumberField = new JTextField();
+            phoneNumberField = new JTextField(pharmacy.getPhoneNumber());
             hoursofOperationLabel = new JLabel("Hours of Operation:");
-            hoursofOperationField = new JTextField();
+            hoursofOperationField = new JTextField(pharmacy.getHoursOfOperation());
             socialMediaLabel = new JLabel("Social Media Handle:");
-            socialMediaField = new JTextField();
+            socialMediaField = new JTextField(pharmacy.getSocialMediaHandle());
             saveButton = new JButton("Save");
+            saveButton.setForeground(Color.WHITE);
+            saveButton.setFont(myFont);
+            saveButton.setBackground(new Color(12, 35, 75));
+            resetButton = new JButton("Reset");
+            resetButton.setForeground(Color.WHITE);
+            resetButton.setFont(myFont);
+            resetButton.setBackground(new Color(12, 35, 75));
 
-            saveButton = new JButton("Save");
+
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == saveButton) {
-                    Pharmacy updatedPharmacy = getUpdatedPharmacy(); // Implement this method to create a new Pharmacy object with the updated values
-                    PharmacyPanel updatedPanel = new PharmacyPanel();
-                    updatedPanel.pharmacy = updatedPharmacy;
+                    Pharmacy updatedPharmacy = getUpdatedPharmacy();
+                    pharmacy.setName(updatedPharmacy.getName());
+                    pharmacy.setWebsiteUrl(updatedPharmacy.getWebsiteUrl());
+                    pharmacy.setOwner(updatedPharmacy.getOwner());
+                    pharmacy.setPhoneNumber(updatedPharmacy.getPhoneNumber());
+                    pharmacy.setHoursOfOperation(updatedPharmacy.getHoursOfOperation());
+                    pharmacy.setSocialMediaHandle(updatedPharmacy.getSocialMediaHandle());
+                }
+            }
+        });
+
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == resetButton) {
+                        pharmacyNameField.setText("");
+                        websiteURLField.setText("");
+                        ownerField.setText("");
+                        phoneNumberField.setText("");
+                        hoursofOperationField.setText("");
+                        socialMediaField.setText("");
                 }
             }
         });
@@ -113,9 +157,8 @@ public class PharmacyGUI extends JFrame implements ActionListener {
             add(hoursofOperationField);
             add(socialMediaLabel);
             add(socialMediaField);
-            add(new JLabel());
             add(saveButton);
-
+            add(resetButton);
         }
 
         public void initialize() {

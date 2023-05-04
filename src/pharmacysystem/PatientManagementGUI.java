@@ -19,36 +19,60 @@ public class PatientManagementGUI extends JFrame implements ActionListener {
     private CreatePatientPanel createPatientPanel;
     private ViewPatientPanel viewPatientPanel;
     private HashMap<String, Patient> patientMap;
+    private JPanel headerPanel;
+    Font myFont = new Font("Proxima Nova", Font.BOLD, 14);
 
     public PatientManagementGUI() {
         super("Patient Management");
+
+        // set up the header panel with an image
+        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/pharmacy.png"));
+        JLabel header = new JLabel(icon);
+        header.setPreferredSize(new Dimension(200, 50));
+        headerPanel = new JPanel();
+        headerPanel.add(header);
+        headerPanel.setBackground(new Color(171, 5, 32));
         
         createPatientButton = new JButton("Create Patient");
         createPatientButton.addActionListener(this);
+        createPatientButton.setFont(myFont);
+        createPatientButton.setFocusable(false);
+        createPatientButton.setForeground(Color.WHITE);
+        createPatientButton.setBackground(new Color(12, 35, 75));
         
         viewPatientButton = new JButton("View Patient");
+        viewPatientButton.setFocusable(false);
+        viewPatientButton.setFont(myFont);
         viewPatientButton.addActionListener(this);
+        viewPatientButton.setForeground(Color.WHITE);
+        viewPatientButton.setBackground(new Color(12, 35, 75));
         
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+        buttonPanel.setBackground(new Color(171, 5, 32));
+        buttonPanel.setPreferredSize(new Dimension(500, 30));
         buttonPanel.add(createPatientButton);
         buttonPanel.add(viewPatientButton);
+
+        createPatientPanel = new CreatePatientPanel(this);
+        viewPatientPanel = new ViewPatientPanel(this);
         
         // Set up panels
         mainPanel = new JPanel();
         cardLayout = new CardLayout();
         mainPanel.setLayout(cardLayout);
-        createPatientPanel = new CreatePatientPanel(this);
-        viewPatientPanel = new ViewPatientPanel(this);
         mainPanel.add(createPatientPanel, "createPatient");
         mainPanel.add(viewPatientPanel, "viewPatient");
-        add(mainPanel);
+        mainPanel.setPreferredSize(new Dimension(600, 420));
         
-        getContentPane().add(buttonPanel, BorderLayout.NORTH);
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        // add the header and buttons to the main menu
+        add(headerPanel, BorderLayout.NORTH);
+        getContentPane().add(buttonPanel, BorderLayout.CENTER);
+        getContentPane().add(mainPanel, BorderLayout.SOUTH);
 
         // Set up frame
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600,400);
+        setSize(600,600);
+        setVisible(true);
         setLocationRelativeTo(null);
 
         
@@ -100,9 +124,12 @@ public class PatientManagementGUI extends JFrame implements ActionListener {
             add(new JLabel("Policy Number:"));
             policyNumberTextField = new JTextField();
             add(policyNumberTextField);
-            add(new JLabel(""));
+            add(new JLabel());
             createPatientButton = new JButton("Create Patient Account");
+            createPatientButton.setFont(myFont);
             createPatientButton.addActionListener(listener);
+            createPatientButton.setForeground(Color.WHITE);
+            createPatientButton.setBackground(new Color(12, 35, 75));
             add(createPatientButton);
         }
 

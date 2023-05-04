@@ -10,11 +10,13 @@ public class ManagerViewInventoryPanel extends JPanel {
     private JLabel titleLabel;
     private JTable inventoryTable;
     private DefaultTableModel tableModel;
-    private Inventory inventory; // add an instance variable for Inventory
+    private Inventory inventory;
+    Font myFont = new Font("Proxima Nova", Font.BOLD, 12);
 
     public ManagerViewInventoryPanel() {
         setLayout(new BorderLayout());
         titleLabel = new JLabel("Current Inventory", JLabel.CENTER);
+        titleLabel.setFont(myFont);
         String[] columnNames = {"Item Name", "Expiration Date","Item Price", "Item Quantity"};
         tableModel = new DefaultTableModel(columnNames, 0);
         inventoryTable = new JTable(tableModel);

@@ -3,7 +3,6 @@ package pharmacysystem;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
@@ -15,17 +14,33 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
     private CardLayout cardLayout;
     private FillPrescriptionPanel fillPrescriptionPanel;
     private ProcessTransactionPanel processTransactionPanel;
+    private JPanel headerPanel;
 
     public TransactionManagementGUI() {
         super("Transaction Management");
 
+        // set up the header panel with an image
+        ImageIcon icon = new ImageIcon(getClass().getResource("/resources/pharmacy.png"));
+        JLabel header = new JLabel(icon);
+        header.setPreferredSize(new Dimension(200, 50));
+        headerPanel = new JPanel();
+        headerPanel.add(header);
+        headerPanel.setBackground(new Color(171, 5, 32));
+
         fillPrescriptionButton = new JButton("Fill Prescription");
         fillPrescriptionButton.addActionListener(this);
+        fillPrescriptionButton.setFocusable(false);
+        fillPrescriptionButton.setForeground(Color.WHITE);
+        fillPrescriptionButton.setBackground(new Color(12, 35, 75));
 
         processTransactionButton = new JButton("Process Transaction");
+        processTransactionButton.setFocusable(false);
         processTransactionButton.addActionListener(this);
+        processTransactionButton.setForeground(Color.WHITE);
+        processTransactionButton.setBackground(new Color(12, 35, 75));
 
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
+        buttonPanel.setPreferredSize(new Dimension(500, 30));
         buttonPanel.add(fillPrescriptionButton);
         buttonPanel.add(processTransactionButton);
 
@@ -37,13 +52,16 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         mainPanel.setLayout(cardLayout);
         mainPanel.add(fillPrescriptionPanel, "FillPrescriptionPanel");
         mainPanel.add(processTransactionPanel, "ProcessTransactionPanel");
+        mainPanel.setPreferredSize(new Dimension(600, 420));
 
-        getContentPane().add(buttonPanel, BorderLayout.NORTH);
-        getContentPane().add(mainPanel, BorderLayout.CENTER);
+        add(headerPanel, BorderLayout.NORTH);
+        getContentPane().add(buttonPanel, BorderLayout.CENTER);
+        getContentPane().add(mainPanel, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 600);
         setVisible(true);
+        setLocationRelativeTo(null);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -68,7 +86,10 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         private JTextField inventoryField;
         private JLabel quantityLabel;
         private JSpinner quantitySpinner;
+        private JLabel newinventoryLabel;
+        private JTextField newinventoryField;
         private JButton saveButton;
+        private JButton resetButton;
         private Inventory inventory;
         
         public FillPrescriptionPanel() {
@@ -82,12 +103,19 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         costField = new JTextField();
         inventoryLabel = new JLabel("Current Inventory:");
         inventoryField = new JTextField();
+        newinventoryLabel = new JLabel("New Inventory:");
+        newinventoryField = new JTextField();
         quantityLabel = new JLabel("Quantity Needed:");
         quantitySpinner = new JSpinner();
         saveButton = new JButton("Save");
+        saveButton.setForeground(Color.WHITE);
+        saveButton.setBackground(new Color(12, 35, 75));
+        resetButton = new JButton("Reset");
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setBackground(new Color(12, 35, 75));
 
         // Add the UI components to the frame
-        setLayout(new GridLayout(6, 2));
+        setLayout(new GridLayout(7, 2));
         add(new JLabel("Prescription Name:"));
         add(prescriptionNames);
         add(expirationDateLabel);
@@ -98,8 +126,10 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         add(inventoryField);
         add(quantityLabel);
         add(quantitySpinner);
-        add(new JLabel());
+        add(newinventoryLabel);
+        add(newinventoryField);
         add(saveButton);
+        add(resetButton);
 
         // Add a listener to the prescription name drop-down menu
         prescriptionNames.addActionListener(new ActionListener() {
@@ -121,6 +151,20 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
                 quantitySpinner.setValue(1);
             }
         });
+        // Add a listener to the quantity spinner
+        quantitySpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                // Get the current quantity and inventory
+                int currentQuantity = Integer.parseInt(inventoryField.getText());
+
+                // Calculate the new inventory
+                int newInventory = currentQuantity - (int) quantitySpinner.getValue();
+
+                // Update the newinventoryField
+                newinventoryField.setText(Integer.toString(newInventory));
+            }
+        });
 
         saveButton.addActionListener(new ActionListener() {
             @Override
@@ -139,6 +183,17 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
 
             }
         });
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == resetButton) {
+                        expirationDateField.setText("");
+                        costField.setText("");
+                        quantitySpinner.setValue(0);
+                        newinventoryField.setText("");
+                }
+            }
+        });
 
     }
     }
@@ -154,6 +209,7 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         private JLabel totalCostLabel;
         private JTextField totalCostField;
         private JButton saveButton;
+        private JButton resetButton;
         private Inventory inventory;
         
         public ProcessTransactionPanel() {
@@ -170,6 +226,11 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         totalCostLabel = new JLabel("Total Cost:");
         totalCostField = new JTextField();
         saveButton = new JButton("Process Transaction");
+        saveButton.setForeground(Color.WHITE);
+        saveButton.setBackground(new Color(12, 35, 75));
+        resetButton = new JButton("Reset");
+        resetButton.setForeground(Color.WHITE);
+        resetButton.setBackground(new Color(12, 35, 75));
 
         // Add the UI components to the frame
         setLayout(new GridLayout(6, 2));
@@ -183,8 +244,8 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         add(quantitySpinner);
         add(totalCostLabel);
         add(totalCostField);
-        add(new JLabel());
         add(saveButton);
+        add(resetButton);
 
         prescriptionNames.addActionListener(new ActionListener() {
             @Override
@@ -200,8 +261,8 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
                 expirationDateField.setText(prescription.getExpirationDate().format(formatter));
                 costField.setText(Double.toString(prescription.getCost()));
         
-                // Set the quantity spinner value to 1
-                quantitySpinner.setValue(1);
+                // Set the quantity spinner value to 0
+                quantitySpinner.setValue(0);
         
                 // Update the total cost field
                 double totalCost = prescription.getCost() * (int) quantitySpinner.getValue();
@@ -241,6 +302,17 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
                 SpinnerNumberModel model = (SpinnerNumberModel) quantitySpinner.getModel();
                 model.setValue(quantity);
 
+            }
+        });
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource() == resetButton) {
+                        expirationDateField.setText("");
+                        costField.setText("");
+                        quantitySpinner.setValue(0);
+                        totalCostField.setText("");
+                }
             }
         });
 
