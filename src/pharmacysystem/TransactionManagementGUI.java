@@ -19,6 +19,8 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
 
     public TransactionManagementGUI() {
         super("Transaction Management");
+        ImageIcon img = new ImageIcon("C:\\Users\\Coulter\\Desktop\\PharmacySystem_Team1\\PharmacySystem\\src\\resources\\ua.png");
+            this.setIconImage(img.getImage());
 
         // set up the header panel with an image
         ImageIcon icon = new ImageIcon(getClass().getResource("/resources/pharmacy.png"));
@@ -93,7 +95,7 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         private JTextField newinventoryField;
         private JButton saveButton;
         private JButton resetButton;
-        private Inventory inventory;
+        public Inventory inventory;
     
         
         public FillPrescriptionPanel() {
@@ -186,6 +188,8 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
                 // Update the quantity spinner
                 SpinnerNumberModel model = (SpinnerNumberModel) quantitySpinner.getModel();
                 model.setValue(quantity);
+
+                JOptionPane.showMessageDialog(null, "Prescription Filled.");
 
             }
         });
@@ -310,6 +314,9 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
                 SpinnerNumberModel model = (SpinnerNumberModel) quantitySpinner.getModel();
                 model.setValue(quantity);
 
+                 // Display payment process message with total cost
+                String message = "Process Payment for " + totalCostField.getText();
+                JOptionPane.showMessageDialog(null, message);
             }
         });
         resetButton.addActionListener(new ActionListener() {

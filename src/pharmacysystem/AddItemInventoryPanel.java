@@ -143,8 +143,10 @@ public class AddItemInventoryPanel extends JPanel {
 
                 // Update the inventory table
                 updateInventoryTable();
-            }
-        });
+
+                JOptionPane.showMessageDialog(null, "Items Added to Inventory.");
+                }
+            });
         resetButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

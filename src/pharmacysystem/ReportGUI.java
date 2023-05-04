@@ -19,7 +19,8 @@ public class ReportGUI extends JFrame implements ActionListener {
 
     public ReportGUI() {
         super("Report Generation");
-
+        ImageIcon img = new ImageIcon("C:\\Users\\Coulter\\Desktop\\PharmacySystem_Team1\\PharmacySystem\\src\\resources\\ua.png");
+            this.setIconImage(img.getImage());
         // set up the header panel with an image
         ImageIcon icon = new ImageIcon(getClass().getResource("/resources/pharmacy.png"));
         JLabel header = new JLabel(icon);

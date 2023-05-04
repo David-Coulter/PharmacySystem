@@ -144,6 +144,8 @@ public class RemoveItemInventoryPanel extends JPanel {
 
                 // Update the inventory table
                 updateInventoryTable();
+
+                JOptionPane.showMessageDialog(null, "Items Removed from Inventory.");
             }
         });
         resetButton.addActionListener(new ActionListener() {

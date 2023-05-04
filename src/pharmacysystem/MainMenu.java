@@ -3,6 +3,7 @@ package pharmacysystem;
 import javax.swing.*;
 import java.awt.*;
 
+
     public class MainMenu extends JFrame {
         private JButton patientBtn;
         private JButton inventoryBtn;
@@ -15,6 +16,8 @@ import java.awt.*;
 
         public MainMenu() {
             // set up the main menu GUI
+            ImageIcon img = new ImageIcon("C:\\Users\\Coulter\\Desktop\\PharmacySystem_Team1\\PharmacySystem\\src\\resources\\ua.png");
+            this.setIconImage(img.getImage());
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setTitle("Pharmacy Management System");
 
