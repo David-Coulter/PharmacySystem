@@ -15,6 +15,7 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
     private FillPrescriptionPanel fillPrescriptionPanel;
     private ProcessTransactionPanel processTransactionPanel;
     private JPanel headerPanel;
+    Font myFont = new Font("Proxima Nova", Font.BOLD, 14);
 
     public TransactionManagementGUI() {
         super("Transaction Management");
@@ -29,12 +30,14 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
 
         fillPrescriptionButton = new JButton("Fill Prescription");
         fillPrescriptionButton.addActionListener(this);
+        fillPrescriptionButton.setFont(myFont);
         fillPrescriptionButton.setFocusable(false);
         fillPrescriptionButton.setForeground(Color.WHITE);
         fillPrescriptionButton.setBackground(new Color(12, 35, 75));
 
         processTransactionButton = new JButton("Process Transaction");
         processTransactionButton.setFocusable(false);
+        processTransactionButton.setFont(myFont);
         processTransactionButton.addActionListener(this);
         processTransactionButton.setForeground(Color.WHITE);
         processTransactionButton.setBackground(new Color(12, 35, 75));
@@ -91,6 +94,7 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         private JButton saveButton;
         private JButton resetButton;
         private Inventory inventory;
+    
         
         public FillPrescriptionPanel() {
         	inventory = new Inventory();
@@ -108,9 +112,11 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         quantityLabel = new JLabel("Quantity Needed:");
         quantitySpinner = new JSpinner();
         saveButton = new JButton("Save");
+        saveButton.setFont(myFont);
         saveButton.setForeground(Color.WHITE);
         saveButton.setBackground(new Color(12, 35, 75));
         resetButton = new JButton("Reset");
+        resetButton.setFont(myFont);
         resetButton.setForeground(Color.WHITE);
         resetButton.setBackground(new Color(12, 35, 75));
 
@@ -226,9 +232,11 @@ public class TransactionManagementGUI extends JFrame implements ActionListener {
         totalCostLabel = new JLabel("Total Cost:");
         totalCostField = new JTextField();
         saveButton = new JButton("Process Transaction");
+        saveButton.setFont(myFont);
         saveButton.setForeground(Color.WHITE);
         saveButton.setBackground(new Color(12, 35, 75));
         resetButton = new JButton("Reset");
+        resetButton.setFont(myFont);
         resetButton.setForeground(Color.WHITE);
         resetButton.setBackground(new Color(12, 35, 75));
 
