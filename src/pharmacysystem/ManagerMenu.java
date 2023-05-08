@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 
-    public class MainMenu extends JFrame {
+    public class ManagerMenu extends JFrame {
         private JButton patientBtn;
         private JButton inventoryBtn;
         private JButton transactionBtn;
@@ -14,7 +14,7 @@ import java.awt.*;
 
         Font myFont = new Font("Proxima Nova", Font.PLAIN, 20);
 
-        public MainMenu() {
+        public ManagerMenu() {
             // set up the main menu GUI
             ImageIcon img = new ImageIcon("C:\\Users\\Coulter\\Desktop\\PharmacySystem_Team1\\PharmacySystem\\src\\resources\\ua.png");
             this.setIconImage(img.getImage());
@@ -82,7 +82,7 @@ import java.awt.*;
             add(headerPanel, BorderLayout.NORTH);
             add(buttonpanel, BorderLayout.CENTER);
 
-            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setSize(600, 600);
             setVisible(true);
             setLocationRelativeTo(null);
@@ -118,6 +118,6 @@ import java.awt.*;
     }
 
     public static void main(String[] args) {
-        new MainMenu();
+        new ManagerMenu();
     }
 }

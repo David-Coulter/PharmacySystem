@@ -1,15 +1,16 @@
 package pharmacysystem;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 public class PatientManagementGUI extends JFrame implements ActionListener {
@@ -55,7 +56,7 @@ public class PatientManagementGUI extends JFrame implements ActionListener {
         buttonPanel.add(viewPatientButton);
 
         createPatientPanel = new CreatePatientPanel(this);
-        viewPatientPanel = new ViewPatientPanel(this);
+        viewPatientPanel = new ViewPatientPanel();
         
         // Set up panels
         mainPanel = new JPanel();
@@ -142,14 +143,17 @@ public class PatientManagementGUI extends JFrame implements ActionListener {
             String insuranceProvider = insuranceProviderTextField.getText();
             String policyNumber = policyNumberTextField.getText();
 
-            // Create a new patient object
+            // Create a new patient objectM
             Patient patient = new Patient(name, dob, address, phone, insuranceProvider, policyNumber);
 
             // Add the patient to the patient map
             patientMap.put(name, patient);
 
             // Add the patient to the Patient class's list of patients
-            Patient.getPatients().add(patient);
+            Patient.addPatient(patient);
+
+            // Update the table model in the viewPatientPanel
+            viewPatientPanel.updateTable();
 
             // Reset the text fields
             nameTextField.setText("");
@@ -160,118 +164,65 @@ public class PatientManagementGUI extends JFrame implements ActionListener {
             policyNumberTextField.setText("");
 
             JOptionPane.showMessageDialog(null, "Patient Account Created.");
+
+            // Add the patient to the patient map
+            System.out.println("Patient added to patientMap: " + patientMap.containsKey(name));
+
         }
     }
 
     public class ViewPatientPanel extends JPanel {
-        private JComboBox<String> nameComboBox;
-        private JTextField dobTextField;
-        private JTextField addressTextField;
-        private JTextField phoneTextField;
-        private JTextField insuranceProviderTextField;
-        private JTextField policyNumberTextField;
-        private JTextArea purchaseHistoryTextArea;
-
-        private Map<String, Patient> patientMap;
-
-        public ViewPatientPanel(ActionListener listener) {
-            patientMap = new HashMap<>();
-            List<Patient> patients = Patient.getPatients();
-            for (Patient patient : patients) {
-                patientMap.put(patient.getName(), patient);
-            }
-
-            setLayout(new GridBagLayout());
-            GridBagConstraints c = new GridBagConstraints();
-
-            c.gridx = 0;
-            c.gridy = 0;
-            c.anchor = GridBagConstraints.WEST;
-            add(new JLabel("Name:"), c);
-
-            c.gridx = 1;
-            c.gridy = 0;
-            nameComboBox = new JComboBox<>(patients.stream().map(Patient::getName).toArray(String[]::new));
-            nameComboBox.addActionListener(new ActionListener() {
+        private JTextField searchField;
+        private JButton searchButton;
+        private JTable table;
+        private DefaultTableModel tableModel;
+    
+        public ViewPatientPanel() {
+            // Create the search field and add it to the panel
+            searchField = new JTextField(20);
+            add(searchField);
+    
+            // Create the search button and add it to the panel
+            searchButton = new JButton("Search");
+            searchButton.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
-                    String name = (String) nameComboBox.getSelectedItem();
-                    Patient patient = patientMap.get(name);
-                    if (patient != null) {
-                        dobTextField.setText(patient.getDateOfBirth().toString());
-                        addressTextField.setText(patient.getAddress());
-                        phoneTextField.setText(patient.getPhoneNumber());
-                        insuranceProviderTextField.setText(patient.getInsuranceProvider());
-                        policyNumberTextField.setText(patient.getPolicyNumber());
-                    }
+                    updateTable();
                 }
             });
-            add(nameComboBox, c);
-
-            c.gridx = 0;
-            c.gridy = 1;
-            add(new JLabel("Date of Birth: "), c);
-
-            c.gridx = 1;
-            c.gridy = 1;
-            dobTextField = new JTextField();
-            dobTextField.setPreferredSize(new Dimension(200, 30));
-            dobTextField.setEditable(false);
-            add(dobTextField, c);
-
-            c.gridx = 0;
-            c.gridy = 2;
-            add(new JLabel("Address: "), c);
-
-            c.gridx = 1;
-            c.gridy = 2;
-            addressTextField = new JTextField();
-            addressTextField.setPreferredSize(new Dimension(200, 30));
-            addressTextField.setEditable(false);
-            add(addressTextField, c);
-
-            c.gridx = 0;
-            c.gridy = 3;
-            add(new JLabel("Phone Number: "), c);
-
-            c.gridx = 1;
-            c.gridy = 3;
-            phoneTextField = new JTextField();
-            phoneTextField.setPreferredSize(new Dimension(200, 30));
-            phoneTextField.setEditable(false);
-            add(phoneTextField, c);
-
-            c.gridx = 0;
-            c.gridy = 4;
-            add(new JLabel("Insurance Provider: "), c);
-
-            c.gridx = 1;
-            c.gridy = 4;
-            insuranceProviderTextField = new JTextField();
-            insuranceProviderTextField.setPreferredSize(new Dimension(200, 30));
-            insuranceProviderTextField.setEditable(false);
-            add(insuranceProviderTextField, c);
-
-            c.gridx = 0;
-            c.gridy = 5;
-            add(new JLabel("Policy Number: "), c);
-
-            c.gridx = 1;
-            c.gridy = 5;
-            policyNumberTextField = new JTextField();
-            policyNumberTextField.setPreferredSize(new Dimension(200, 30));
-            policyNumberTextField.setEditable(false);
-            add(policyNumberTextField, c);
-
-            c.gridx = 0;
-            c.gridy = 6;
-            add(new JLabel("Purchase History: "), c);
-
-            c.gridx = 1;
-            c.gridy = 6;
-            purchaseHistoryTextArea = new JTextArea();
-            JScrollPane scrollPane = new JScrollPane(purchaseHistoryTextArea);
-            scrollPane.setPreferredSize(new Dimension(300, 100));
-            add(scrollPane, c);
+            add(searchButton);
+    
+            // Create the table and add it to the panel
+            tableModel = new DefaultTableModel();
+            tableModel.addColumn("Name");
+            tableModel.addColumn("Date of Birth");
+            tableModel.addColumn("Address");
+            tableModel.addColumn("Phone Number");
+            tableModel.addColumn("Insurance Provider");
+            tableModel.addColumn("Policy Number");
+            table = new JTable(tableModel);
+            JScrollPane scrollPane = new JScrollPane(table);
+            add(scrollPane);
+    
+            // Load initial data
+            updateTable();
+        }
+    
+        public void updateTable() {
+            DefaultTableModel model = (DefaultTableModel)table.getModel();
+            model.setRowCount(0);
+            String searchTerm = searchField.getText().toLowerCase();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            for (Patient patient : Patient.getPatients()) {
+                if (patient.getName().toLowerCase().contains(searchTerm) ||
+                    formatter.format(patient.getDateOfBirth()).contains(searchTerm) ||
+                    patient.getAddress().toLowerCase().contains(searchTerm) ||
+                    patient.getPhoneNumber().toLowerCase().contains(searchTerm) ||
+                    patient.getInsuranceProvider().toLowerCase().contains(searchTerm) ||
+                    patient.getPolicyNumber().toLowerCase().contains(searchTerm)) {
+                    model.addRow(new Object[]{patient.getName(), formatter.format(patient.getDateOfBirth()), patient.getAddress(), patient.getPhoneNumber(), patient.getInsuranceProvider(), patient.getPolicyNumber()});
+                }
+            }
         }
     }
 
